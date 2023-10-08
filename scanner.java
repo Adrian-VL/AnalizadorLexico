@@ -183,6 +183,94 @@ public class Scanner {
                 i--;
             }
         break;
+                case 11:
+                    if(Character.isDigit(c)){
+                        estado = 11;
+                        lexema += c;
+                    }
+                    else if(c == '.'){
+                        estado = 12;
+                        lexema += c;
+                    }
+                    else if(c == 'E'){
+                        estado = 14;
+                        lexema += c;
+                    }
+                    else{
+                        Token t = new Token(TipoToken.NUMBER, lexema, Integer.valueOf(lexema));
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                break;
+                case 12:
+                    if(Character.isDigit(c)){
+                        estado = 13;
+                        lexema += c;
+                    }
+                    else{
+                        lexema = lexema.substring(0, lexema.length() - 1);
+                        Token t = new Token(TipoToken.NUMBER, lexema, Integer.valueOf(lexema));
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                        i--;
+                    }
+                break;
+                case 13:
+                    if(Character.isDigit(c)){
+                        estado = 13;
+                        lexema += c;
+                    }
+                    else if(c == 'E'){
+                        estado = 14;
+                        lexema += c;
+                    }
+                    else{
+                        Token t = new Token(TipoToken.NUMBER, lexema, Float.parseFloat(lexema));
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                break;
+                case 14:
+                    if(Character.isDigit(c)){
+                        estado = 15;
+                        lexema += c;
+                    }
+                    else{
+                        if(lexema.contains(".")){
+                            lexema = lexema.substring(0, lexema.length() - 1);
+                            Token t = new Token(TipoToken.NUMBER, lexema, Integer.valueOf(lexema));
+                            tokens.add(t);
+                        }
+                        else{
+                            lexema = lexema.substring(0, lexema.length() - 1);
+                            Token t = new Token(TipoToken.NUMBER, lexema, Float.parseFloat(lexema));
+                            tokens.add(t);
+                        }
+                        i--;
+                        i--;
+                        lexema = "";
+                        estado = 0;
+                    }
+                break;
+                case 15:
+                    if(Character.isDigit(c)){
+                        estado = 15;
+                        lexema += c;
+                    }
+                    else{
+                        Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema));
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                break;
 
 
         return tokens;
