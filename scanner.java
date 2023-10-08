@@ -46,9 +46,13 @@ public class Scanner {
                         estado = 13;
                         lexema += c;
                     }
-                    else if(Character.isDigit(c)){
+                    /*else if(Character.isDigit(c)){
                         estado = 15;
+                        lexema += c;*/
+                    else if(Character.isDigit(c)){
+                        estado = 11;
                         lexema += c;
+                    }
 
                         /*while(Character.isDigit(c)){
                             lexema += c;
