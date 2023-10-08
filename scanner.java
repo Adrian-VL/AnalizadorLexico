@@ -63,6 +63,14 @@ public class Scanner {
                         estado = 7;
                         lexema += c;
                     }
+                    else if(c == '!'){
+                        estado = 10;
+                        lexema += c;
+                    }
+                    else if(c =='"'){
+                        estado = 16;
+                        lexema += c;
+                    }
 
                        
 
@@ -183,6 +191,20 @@ public class Scanner {
                 i--;
             }
         break;
+                case 10:
+                    if(c == '='){
+                        lexema += c;
+                        Token t = new Token(TipoToken.BANG_EQUAL, lexema);
+                        tokens.add(t);
+                    }
+                    else{
+                        Token t = new Token(TipoToken.BANG, lexema);
+                        tokens.add(t);
+                        i--;
+                    }
+                    estado = 0;
+                    lexema = "";
+                break;
                 case 11:
                     if(Character.isDigit(c)){
                         estado = 11;
@@ -269,6 +291,41 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                         i--;
+                    }
+                break;
+                case 16:
+                    if(c == '\n'){
+                        Interprete.error(linea, "Salto de linea no permitido");
+                        estado = 0;
+                        do {
+                            if(i != (source.length() - 1)){
+                                i++;
+                                c = source.charAt(i);
+                            }
+                            else{
+                                Interprete.error(linea, "Se esperaba '\"'");
+                                break;
+                            }
+                            if(c == '\n'){
+                                Interprete.error(linea, "Salto de linea no permitido");
+                            }
+                        } while (c != '"');
+                        estado = 0;
+                        lexema = "";
+                    }
+                    else if(c != '"'){
+                        estado = 16;
+                        lexema += c;
+                        if(i == (source.length() - 1)){
+                            Interprete.error(linea, "Se esperaba '\"'");
+                        }
+                    }
+                    else{
+                        lexema += c;
+                        Token t = new Token(TipoToken.STRING, lexema, lexema.substring(1, lexema.length() - 1));
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
                     }
                 break;
 
